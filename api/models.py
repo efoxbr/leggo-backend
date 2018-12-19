@@ -258,3 +258,20 @@ class Emendas(models.Model):
     class Meta:
         ordering = ('-data_apresentacao',)
         get_latest_by = '-data_apresentacao'
+
+class Comissao(models.Model):
+    '''
+    Composição das comissões
+    '''
+
+    cargo = models.TextField(blank=True)
+
+    partido = models.TextField(blank=True)
+
+    uf = models.TextField(blank=True)
+
+    situacao = models.TextField(blank=True)
+
+    nome = models.TextField(blank=True)
+
+    sigla_comissao = models.TextField()

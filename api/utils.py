@@ -1,7 +1,7 @@
 import pandas as pd
 from api.models import (
     EtapaProposicao, TramitacaoEvent, TemperaturaHistorico,
-    Progresso, Proposicao, PautaHistorico, Emendas)
+    Progresso, Proposicao, PautaHistorico, Emendas, Comissao)
 from scipy import stats
 import time
 
@@ -149,6 +149,14 @@ def import_emendas():
         Emendas.objects.bulk_create(
             Emendas(**r[1].to_dict()) for r in group_df.iterrows())
 
+def import_comissoes():
+    '''Carrega comissoes'''
+    comissoes_df = pd.read_csv('data/comissoes.csv')
+
+    for r in comissoes_df.iterrows():
+        Comissao.objects.bulk_create(
+            Comissao(**r[1].to_dict()))
+
 
 def import_all_data():
     '''Importa dados dos csv e salva no banco.'''
@@ -159,6 +167,7 @@ def import_all_data():
     import_progresso()
     import_pautas()
     import_emendas()
+    import_comissoes()
 
 
 def get_coefficient_temperature(temperatures):

@@ -6,7 +6,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from api.models import (
     EtapaProposicao, TemperaturaHistorico,
-    Progresso, Proposicao, PautaHistorico, Emendas, TramitacaoEvent)
+    Progresso, Proposicao, PautaHistorico, Emendas, TramitacaoEvent, Comissao)
 from datetime import datetime, timedelta
 from api.utils import get_coefficient_temperature
 
@@ -58,6 +58,13 @@ class EmendasSerialzer(serializers.ModelSerializer):
     class Meta:
         model = Emendas
         fields = ('data_apresentacao', 'local', 'autor')
+
+
+class ComissoesSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = Comissao
+        fields = ('cargo', 'partido', 'uf',
+                 'situacao', 'nome', 'sigla_comissao')
 
 
 class Info(APIView):
@@ -353,3 +360,20 @@ class EmendasList(generics.ListAPIView):
             proposicao__casa=casa, proposicao__id_ext=id_ext)
 
         return queryset
+
+class ComissaoDetail(APIView):
+    '''
+    Detalha comissoes
+    '''
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'casa', openapi.IN_PATH, 'casa da comissao', type=openapi.TYPE_STRING),
+            openapi.Parameter(
+                'sigla', openapi.IN_PATH, 'sigla da comissao no sistema da casa',
+                type=openapi.TYPE_INTEGER),
+        ]
+    )
+    def get(self, request, casa, id_ext, format=None):
+        comiss = get_object_or_404(Comissao, casa=casa, sigla_comissao=sigla)
+        return Response(ComissoesSerialzer(comiss).data)

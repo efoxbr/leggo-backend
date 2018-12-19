@@ -23,4 +23,6 @@ urlpatterns = [
         views.PautaList.as_view()),
     url(r'^emenda/(?P<casa>[a-z]+)/(?P<id_ext>[0-9]+)/?$',
         views.EmendasList.as_view()),
+    url(r'^comissao/(?P<casa>[a-z]+)/(?P<sigla>[0-9]+)/?$',
+        views.ComissaoDetail.as_view()),
 ]
